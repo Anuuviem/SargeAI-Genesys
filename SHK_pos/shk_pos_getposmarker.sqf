@@ -50,7 +50,7 @@ for [{_i = 0}, {_i < 1000 && !_exit}, {_i = _i + 1}] do {
     _pos = _p;
   };
 
-	// Water position
+	// Water position //new to sargeAI
 	if (typeName _water == "SCALAR") then {
 	  switch _water do {
 	  
