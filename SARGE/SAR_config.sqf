@@ -75,9 +75,6 @@ SAR_band_kill_value = 50;
 // the humanity value below which a player will be considered hostile
 SAR_HUMANITY_HOSTILE_LIMIT = -2500;
 
-//attempt to give sarAI cash rewards true = cash. false = nocash. (Default: true)
-SAR_COIN_REWARD = true;
-
 // -----------------------------------------------
 // Track and show AI kills in the debug monitor of the player 
 // -----------------------------------------------
