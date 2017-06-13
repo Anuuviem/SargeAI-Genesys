@@ -33,10 +33,10 @@ _aikilled_group_side = side (group _ai);
 
 _aikiller_type = typeof _aikiller;
 
-SAR_AI_friendly_side = resistance;
-SAR_AI_unfriendly_side = east;
+SAR_AI_friendly_side = resistance; //added to fix some issues
+SAR_AI_unfriendly_side = east; //added to fix some issues
 
-#include "SAR_config.sqf"
+#include "SAR_config.sqf" //added to fix some issues
 
 if (!(_aikiller_type in SAR_heli_type) && alive _aikiller && !("LandVehicle" countType [vehicle _aikiller]>0)) then {
     _aikiller_name = name _aikiller;
