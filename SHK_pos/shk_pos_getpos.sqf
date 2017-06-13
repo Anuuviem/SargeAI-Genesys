@@ -77,7 +77,7 @@ if (typeName _water == "SCALAR") then {
     };
   };
 } else { // For backward compatibility
-  // Water position is not allowed
+  // Water position is not allowed //new to sargeAI
   if !_water then {
     if (surfaceIsWater _pos) then {
       private ["_p","_d","_l"];
