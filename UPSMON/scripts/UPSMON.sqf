@@ -2187,8 +2187,8 @@ while {_loop} do {
 				
 				//Search for vehicle			
 				if ((!_gothit && _targetdist >= ( KRON_UPS_searchVehicledist )) && _isSoldier && !_noveh) then {
-							
-					if ( vehicle _npc == _npc && _dist > _closeenough ) then {												
+							//possible defense against stealing licked vehicles
+					if ( vehicle _npc == _npc && _dist > _closeenough && !isLocked) then {												
 					
 						 _unitsIn = [_grpid,_npc] call MON_GetIn_NearestVehicles;		
 						 
