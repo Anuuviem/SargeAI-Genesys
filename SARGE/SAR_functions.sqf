@@ -644,7 +644,7 @@ SAR_AI_veh_trig_on_static = {
         // restore unit rating
         
         // only do this if the rating wasnt changed while in the vehicle
-        _player_rating = rating _player_left;
+        _player_rating = rating _player_left; //Error Undefined variable in expression: _player_left
         
         if(_player_rating == 0) then {
         

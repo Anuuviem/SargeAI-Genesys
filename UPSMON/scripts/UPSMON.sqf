@@ -1480,8 +1480,8 @@ while {_loop} do {
 			_i = 0;
 			
 			{			
-				if (_foreachindex !=0 && {_i != _grpid} &&  {format ["%1", _x] != "[0,0]"}) then {
-					_dist1 = [_x,_flankPos] call KRON_distancePosSqr;
+				if (_foreachindex !=0 && {_i != _grpid} &&  {format ["%1", _x] != "[0,0]"}) then { //Error Undefined variable in expression: _x
+					_dist1 = [_x,_flankPos] call KRON_distancePosSqr; //Error Undefined variable in expression: _x
 					_dist2 = [_x,_flankPos2] call KRON_distancePosSqr;	
 					_dist3 = [_x,_frontPos] call KRON_distancePosSqr;	
 					if (_dist1 <= _flankdist/1.5 || _dist2 <= _flankdist/1.5 || _dist3 <= _flankdist/1.5) then {					
@@ -2188,7 +2188,7 @@ while {_loop} do {
 				//Search for vehicle			
 				if ((!_gothit && _targetdist >= ( KRON_UPS_searchVehicledist )) && _isSoldier && !_noveh) then {
 							//possible defense against stealing licked vehicles
-					if ( vehicle _npc == _npc && _dist > _closeenough && !isLocked) then {												
+					if ( vehicle _npc == _npc && _dist > _closeenough ) then {												
 					
 						 _unitsIn = [_grpid,_npc] call MON_GetIn_NearestVehicles;		
 						 
@@ -2492,8 +2492,8 @@ while {_loop} do {
 	_cont = (call compile format ["KRON_UPS_%1",_npcname]);
     
     if(SAR_DEBUG) then {diag_log format ["_cont = %1 for leader: %2", _cont, format ["KRON_UPS_%1",_npcname]];};
-	
-    if (_cont==0) then { // exit loop criterium
+	//changing then { _exit=true;  to exitWith { _exit=true; just for shits and giggles
+    if (_cont==0) exitWith { // exit loop criterium //Error Undefined variable in expression: _cont
         _exit=true;
     };
 
@@ -2737,7 +2737,8 @@ if (_respawn && {_respawnmax > 0} &&  {!_surrended}) then {
         [nil,_leader,rADDACTION,"Give me a blood transfusion!", "addons\SARGE\SAR_interact.sqf","",1,true,true,"",_cond] call RE;
          
         [_leader] joinSilent _group;
-
+		
+		_leadername = "LeaderDood";
         _leadername = format["SAR_leader_%1",_grpidx];
         _leader setVariable ["SAR_leader_name",_leadername,false];
 

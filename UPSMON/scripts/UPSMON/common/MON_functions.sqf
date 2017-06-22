@@ -679,7 +679,7 @@ MON_NearestLandTransport = {
 		
 		_transportSoldier = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
 		
-		if (!locked _x  && canMove _x && _transportSoldier >= count (units _npc) && !(typeof _x in MON_bugged_vehicles)
+		if (!Locked _x  && canMove _x && _transportSoldier >= count (units _npc) && !(typeof _x in MON_bugged_vehicles)
 			&& (_drivercount > 0 || side _npc == side _x )) exitwith {_vehicle = _x;};
 	}foreach _OCercanos;
 	
@@ -716,7 +716,7 @@ MON_NearestsLandTransports = {
 		
 		_emptypositions = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
 		
-		if (!locked _x && _emptypositions > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
+		if (!Locked _x && _emptypositions > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
 			&& (_drivercount > 0 || side _npc == side _x )) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
 	}foreach _OCercanos;
 	
@@ -756,7 +756,7 @@ MON_NearestsLandCombat = {
 		
 		_emptypositions = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
 		
-		if (!locked _x && _Gunnercount > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
+		if (!Locked _x && _Gunnercount > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
 			&& (_drivercount > 0 || side _npc == side _x )) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
 	}foreach _OCercanos;
 	
@@ -793,7 +793,7 @@ MON_NearestsAirTransports = {
 		
 		_emptypositions = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
 		
-		if (!locked _x && _emptypositions > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
+		if (!Locked _x && _emptypositions > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
 			&& (_drivercount > 0 || side _npc == side _x )) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
 	}foreach _OCercanos;
 	
@@ -837,7 +837,7 @@ MON_NearestsAirCombat = {
 		
 		_emptypositions = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
 		
-		if (!locked _x && _Gunnercount > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
+		if (!Locked _x && _Gunnercount > 0 && canMove _x && !(typeof _x in MON_bugged_vehicles)
 			&& (_drivercount > 0 || side _npc == side _x )) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
 	}foreach _OCercanos;
 	_vehicles //return
@@ -865,7 +865,7 @@ MON_NearestsStaticWeapons = {
 		{
 			_Gunnercount = (_x) emptyPositions "Gunner"; 			
 			_emptypositions = _Gunnercount;
-			if (!locked _x && alive _x && _emptypositions > 0 && !(typeof _x in MON_bugged_vehicles) ) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
+			if (!Locked _x && alive _x && _emptypositions > 0 && !(typeof _x in MON_bugged_vehicles) ) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
 		}foreach _OCercanos;
 		
 		_vehicles //return
@@ -901,7 +901,7 @@ MON_Nearestsboats = {
 			
 			_emptypositions = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
 			
-			if (!locked _x && _emptypositions > 0 && canMove _x && (_drivercount > 0 || side _npc == side _x )) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
+			if (!Locked _x && _emptypositions > 0 && canMove _x && (_drivercount > 0 || side _npc == side _x )) then { _vehicles = _vehicles + [[_x,_emptypositions]];};
 		}foreach _OCercanos;
 		
 		_vehicles //return
@@ -1902,11 +1902,12 @@ MON_patrolBuilding = {
 	};		
 };
 
+//NO MINES IN EPOCH, I THINK........
 //Function to put a mine
 //Par�meters: [_npc,(_position)]
 //	<-	 _npc: leader
 // 	<-	 _position:location for mine (optional)
-MON_CreateMine = {
+/*MON_CreateMine = {
 	private ["_npc","_rnd","_soldier","_position"];
 	_soldier = _this select 0;
 	 if ((count _this) > 1) then {_position = _this select 1;} else {_position = [0,0];};
@@ -1969,7 +1970,7 @@ MON_doCreateMine = {
 	
 	//Return to formation
 	_soldier domove position ( leader _soldier );
-};
+};*/
 
 //Function to surrender AI soldier
 //Par�meters: [_npc]
@@ -2060,7 +2061,7 @@ MON_getleader = {
         };
 
     
-        _npc setVehicleVarname _leadername;
+        _npc setVehicleVarname _leadername; //Error Undefined variable in expression: _leadername
         _npc setVariable ["SAR_leader_name",_leadername,false];
         _npc setVariable ["SAR_fightmode",_fightmode,false];
 

@@ -82,8 +82,18 @@ if (_ai_killer_xp >= SAR_AI_XP_LVL_3) then {
 };
 
 
-
-
+if (SAR_COIN_REWARD  && Z_singleCurrency) then {
+	_aiKilled = _ai;
+	if (_aikilled_group_side == SAR_AI_friendly_side) then {
+		_cash = (round(random SAR_COIN_AMOUNT) * (round(random SAR_COIN_MULT)) + 15); // adds money to ai wallets in random 300 * random 25 increments. 
+		_aiKilled setVariable[Z_MoneyVariable,_cash ,true];
+	};
+	if (_aikilled_group_side == SAR_AI_unfriendly_side) then {
+		_cash = (round(random SAR_COIN_AMOUNT) * (round(random SAR_COIN_MULT)) + 15); // adds money to ai wallets in random 300 * random 25 increments. 
+		_aiKilled setVariable[Z_MoneyVariable,_cash ,true];
+	};
+};
+	
 if (SAR_KILL_MSG) then {
 
     if(isPlayer _aikiller) then {
@@ -91,7 +101,6 @@ if (SAR_KILL_MSG) then {
         diag_log _message;
         
         [nil, nil, rspawn, [[West,"airbase"], _message], { (_this select 0) sideChat (_this select 1) }] call RE;
-        
     };
 
     if(!isPlayer _aikiller && !(isNull _aikiller)) then {
@@ -136,11 +145,6 @@ if(isPlayer _aikiller) then {
             _message = "NO CAPS in sidechat !!!";
             [nil, nil, rspawn, [[West,"airbase"], _message], { (_this select 0) sideChat (_this select 1) }] call RE;
         };
-		if (SAR_COIN_REWARD) then {
-			if (_humankills) then {
-					_aikiller setVariable [Z_MoneyVariable,(_aicoins - 500),true]; //subtract 500 if ai kill is on friendly side
-			};
-		};
     };
     if (_aikilled_group_side == SAR_AI_unfriendly_side) then {
         if(SAR_DEBUG)then{diag_log format["SAR_DEBUG: Adjusting humanity for bandit kill by %2 for %1",_aikiller,SAR_band_kill_value];};
@@ -166,13 +170,7 @@ if(isPlayer _aikiller) then {
             _message = "SRY CAPS ...";
             [nil, nil, rspawn, [[West,"airbase"], _message], { (_this select 0) sideChat (_this select 1) }] call RE;
         };
-		if (SAR_COIN_REWARD) then {
-			if (_banditkills) then {
-					_aikiller setVariable [Z_MoneyVariable,(_aicoins + 250),true]; //add 250 if ai kill is not on friendly side
-			};
-		};
-        
-    };
+	};
 
 } else {
 

@@ -72,6 +72,12 @@ SAR_surv_kill_value = 250;
 // Humanity Value that gets ADDED for a bandit AI kill
 SAR_band_kill_value = 50;
 
+SAR_COIN_REWARD = true;
+
+SAR_COIN_AMOUNT = 300;
+
+SAR_COIN_MULT = 25;
+
 // the humanity value below which a player will be considered hostile
 SAR_HUMANITY_HOSTILE_LIMIT = -2500;
 

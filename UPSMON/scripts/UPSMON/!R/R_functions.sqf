@@ -222,7 +222,7 @@ R_ThrowSmoke =
 
                         if (KRON_UPS_Debug>0) then {diag_log format["KRON_UPS_Debug: Crew got out of a vehicle. Vehicle %1: Getoutdist dist=%2 atdist=%3 ",typeof _vehicle,_dist, _atdist]};
                         
-                        [_npc,"defend"] spawn SAR_circle;
+                        [_npc,"defend"] spawn SAR_circle; //Error Undefined variable in expression: sar_circle
 
 						//We removed the id to the vehicle so it can be reused
 						_x setVariable ["UPSMON_grpid", 0, false];	
