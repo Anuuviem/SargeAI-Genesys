@@ -16,7 +16,6 @@
 //   last modified: 28.5.2013
 // ---------------------------------------------------------------------------------------------------------
 SAR_commentator = {
-   
     
 private ["_unitpos","_group","_speaker"];
 
@@ -87,6 +86,7 @@ _area_name = _this select 0;
         _tries2=_tries2+1;
         
         _targetPosTemp = [_centerX,_centerY,_rangeX,_rangeY,_cosdir,_sindir,_areadir] call KRON_randomPos;
+        diag_log format["[SARGE][Testing] _targetPosTemp = %1",_targetPosTemp];
         _roads = (_targetPosTemp nearRoads 50); 
         if ((count _roads) > 0) then {
             _targetPosTemp = getpos (_roads select 0);
@@ -190,7 +190,10 @@ SAR_AI_debug = {
                 _obj_text_string = format["#(argb,8,8,3)color(%1,%2,%3,%4,ca)",0,0,0,1];
 
             };
-            
+            default //adding this to eliminate errors in rpt.
+            {
+              diag_log "[Sarge][FightMode] Undefined for obj, possible dead or ???";
+            };
             
         };
         
@@ -526,6 +529,7 @@ SAR_AI_veh_trig_on_static = {
     };    
     
     _unit_list = _this select 0;
+    diag_log format["[Sarge][Units][Player] Looking for error in player leave/join. Testing the list [%1] first.",_unit_list]; 
     _trigger = _this select 1;
     _triggername = _this select 2;
     _unitlist=[];
@@ -560,6 +564,7 @@ SAR_AI_veh_trig_on_static = {
         
         //figure out the player that joined
         _player_joined = _unitlist select ((count _unitlist) -1);
+        diag_log format["[Sarge][Units][Player] Looking for error in player leave/join. Testing the players joined [%1] third.",_player_joined];
         
         if(SAR_EXTREME_DEBUG) then {
         
@@ -616,9 +621,9 @@ SAR_AI_veh_trig_on_static = {
         
         // figure out which unit left by comparing _unitlist with _trig_unitlist
         _units_leaving =  _trig_unitlist - _unitlist;
-        
+        diag_log format["[Sarge][Units][Player] Looking for error in player leave/join. Testing the units leaving list [%1] second.",_units_leaving];
         _player_left = _units_leaving select 0;
-        
+        diag_log format["[Sarge][Units][Player] Looking for error in player leave/join. Testing the players left [%1] fourth.",_player_left];
         if(SAR_EXTREME_DEBUG) then {
 
             diag_log format["SAR_EXTREME_DEBUG: Vehicle FIX: Player left, name is: %1",_player_left];

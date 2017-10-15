@@ -18,7 +18,7 @@
 
 private ["_worldname","_startx","_starty","_gridsize_x","_gridsize_y","_gridwidth","_markername","_triggername","_trig_act_stmnt","_trig_deact_stmnt","_trig_cond","_check","_script_handler","_legendname"];
 
-SAR_version = "1.5.0";
+SAR_version = "1.5.2edit1";
 SAR_environment = "dedicated Server";
 
 // establish PvEH on all clients

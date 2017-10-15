@@ -79,7 +79,7 @@ SAR_COIN_AMOUNT = 300;
 SAR_COIN_MULT = 25;
 
 // the humanity value below which a player will be considered hostile
-SAR_HUMANITY_HOSTILE_LIMIT = -2500;
+SAR_HUMANITY_HOSTILE_LIMIT = -5000;
 
 // -----------------------------------------------
 // Track and show AI kills in the debug monitor of the player 
@@ -140,7 +140,7 @@ SAR_heli_shield = false;
 SAR_dynamic_group_respawn = true;
 
 // time after which AI are respawned if configured (can be overwritten in the static AI calls)
-SAR_respawn_waittime = 150; // default 30 seconds
+SAR_respawn_waittime = 600; // default 30 seconds
 
 // -----------------------------------------------
 // Timeout values 

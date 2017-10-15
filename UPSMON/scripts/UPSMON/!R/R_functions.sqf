@@ -220,9 +220,9 @@ R_ThrowSmoke =
 							sleep 0.3;												
 						} foreach _dogetout;
 
-                        if (KRON_UPS_Debug>0) then {diag_log format["KRON_UPS_Debug: Crew got out of a vehicle. Vehicle %1: Getoutdist dist=%2 atdist=%3 ",typeof _vehicle,_dist, _atdist]};
-                        
-                        [_npc,"defend"] spawn SAR_circle; //Error Undefined variable in expression: sar_circle
+            if (KRON_UPS_Debug>0) then {diag_log format["KRON_UPS_Debug: Crew got out of a vehicle. Vehicle %1: Getoutdist dist=%2 atdist=%3 ",typeof _vehicle,_dist, _atdist]};
+            
+            [_npc,"defend"] spawn SAR_circle_static; //Error Undefined variable in expression: sar_circle, possible fix is the actuall function is called SAR_circle_static not SAR_circle
 
 						//We removed the id to the vehicle so it can be reused
 						_x setVariable ["UPSMON_grpid", 0, false];	

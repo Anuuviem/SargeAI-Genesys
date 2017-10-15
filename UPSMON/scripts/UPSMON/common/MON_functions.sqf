@@ -1,5 +1,5 @@
 // =========================================================================================================
-//  Biblioteca de funciones comunes
+//  Common Functions Library
 //  Version: 5.1.0
 //  Author: Monsada (smirall@hotmail.com)
 //		http://www.simulacion-esp.com/
@@ -14,9 +14,10 @@ if !(AcePresent) then {
 };	
 
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n que permite posicionar objetos a la altura definida
-//param1: objeto
-//param2: altura
+
+// Function that allows to position objects at the defined height
+// param1: object
+// param2: height
 MON_subir = {
 
 private ["_object","_altura","_pos","_x","_y","_z"];
@@ -37,12 +38,14 @@ _y = ( _pos select 1 );
 _z = ( _pos select 2 ) + _altura;
 _object setposasl [_x,_y ,_z];
 };
-//Retorna la direcci�n entre dos posiciones
+
+// Returns the address between two positions
 MON_getDirPos = {private["_a","_b","_from","_to","_return"]; _from = _this select 0; _to = _this select 1; _return = 0; _a = ((_to select 0) - (_from select 0)); _b = ((_to select 1) - (_from select 1)); if (_a != 0 || _b != 0) then {_return = _a atan2 _b}; if ( _return < 0 ) then { _return = _return + 360 }; _return};
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n de borra unidades que han sido matadas
-//param1: objeto a borrar cuando muera
-//param2: tiempo a esperar antes de borrar el objeto
+
+// Function deletes units that have been killed
+// param1: object to delete when I die
+// param2: time to wait before deleting the object
 MON_deleteDead = {private["_u","_s"];_u=_this select 0; _s= _this select 1; _u removeAllEventHandlers "killed"; sleep _s; deletevehicle _u};
 MON_deleteDeadDist = {
     private ["_u","_s","_dist","_OCercanos","_cicle","_deleted","_isplayer"];
@@ -59,10 +62,12 @@ MON_deleteDeadDist = {
 	
 	while {!_deleted} do {	
 		_isplayer = false;
-		//Buscamos objetos cercanos
+		
+    // We are looking for nearby objects
 		_OCercanos = nearestObjects [_u, ["Man"] , _dist];		
 		
-		//Validamos si alguno de los soldados cerca es un jugador y est� vivo
+		
+    // We validate if any of the nearby soldiers are a player and are alive
 		{if (isplayer _x && alive _x) exitwith {_isplayer = true;}}foreach _OCercanos;
 	
 		if (!_isplayer) then {		
@@ -73,20 +78,21 @@ MON_deleteDeadDist = {
 	};
 };
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n tomada de UPS, busca el comando en la lista y devuelve el siguiente elemento
-//param1: comando a buscar
-//param2: valor por defecto del comando
-//param3: array con los comandos
-//Retorna valor del comando encontrado o valor por defecto
+
+// Function taken from UPS, look for the command in the list and return the next element
+// param1: command to fetch
+// param2: default value of the command
+// param3: array with commands
+// Returns value of found command or default value
 MON_getArg = {private["_cmd","_arg","_list","_a","_v"]; _cmd=_this select 0; _arg=_this select 1; _list=_this select 2; _a=-1; {_a=_a+1; _v=format["%1",_list select _a]; 
 if (_v==_cmd) then {_arg=(_list select _a+1)}} foreach _list; _arg};
 
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n que devuelve una posici�n en 3D a partir de otra, una direcci�n y una distancia
-//param1: posici�n
-//param2: direcci�n
-//param3: distancia
-//Retorna vector de posicion en 3D [0,0,0]
+// Function that returns a 3D position from another, an address and a distance
+// param1: position
+// param2: address
+// param3: distance
+// Returns position vector in 3D [0,0,0]
 MON_GetPos =
 {
 	private ["_pos","_dir","_dist","_cosU","_cosT","_relTX","_sinU","_sinT","_relTY","_newPos","_newPosX","_newPosY","_targetZ","_targetX","_targetY"];
@@ -95,24 +101,25 @@ MON_GetPos =
 	_dist = _this select 2;
 			
 	_targetX = _pos select 0; 
-    _targetY = _pos select 1; 
-    _targetZ = _pos select 2;
-			
-			//Calculamos posici�n 	
-			_cosU = [_dir] call MON_GetCOS;		_sinU = [_dir] call MON_GetSIN;			
-			_cosT = abs cos(_dir);				_sinT = abs sin(_dir);
-			_relTX = _sinT * _dist * _cosU;  	_relTY = _cosT * _dist * _sinU;
-			_newPosX = _targetX + _relTX;		_newPosY = _targetY + _relTY;		
-			_newPos = [_newPosX,_newPosY,_targetZ];
-			_newPos;
+  _targetY = _pos select 1; 
+  _targetZ = _pos select 2;
+    
+    
+  // Calculate position	
+  _cosU = [_dir] call MON_GetCOS;		_sinU = [_dir] call MON_GetSIN;			
+  _cosT = abs cos(_dir);				_sinT = abs sin(_dir);
+  _relTX = _sinT * _dist * _cosU;  	_relTY = _cosT * _dist * _sinU;
+  _newPosX = _targetX + _relTX;		_newPosY = _targetY + _relTY;		
+  _newPos = [_newPosX,_newPosY,_targetZ];
+  _newPos;
 };
 
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n que devuelve una posici�n en 2D a partir de otra, una direcci�n y una distancia
-//param1: posici�n
-//param2: direcci�n
-//param3: distancia
-//Retorna vector de posicion en 2D [0,0]
+// Function that returns a 2D position from another, a direction and a distance
+// param1: position
+// param2: address
+// param3: distance
+// Returns position vector in 2D [0,0]
 MON_GetPos2D =
 {
 	private ["_pos","_dir","_dist","_cosU","_cosT","_relTX","_sinU","_sinT","_relTY","_newPos","_newPosX","_newPosY","_targetX","_targetY"];
@@ -120,21 +127,21 @@ MON_GetPos2D =
 	_dir = _this select 1;
 	_dist = _this select 2;
 			
-			_targetX = _pos select 0; _targetY = _pos select 1; 
-			
-			//Calculamos posici�n 	
-			_cosU = [_dir] call MON_GetCOS;		_sinU = [_dir] call MON_GetSIN;			
-			_cosT = abs cos(_dir);				_sinT = abs sin(_dir);
-			_relTX = _sinT * _dist * _cosU;  	_relTY = _cosT * _dist * _sinU;
-			_newPosX = _targetX + _relTX;		_newPosY = _targetY + _relTY;		
-			_newPos = [_newPosX,_newPosY];
-			_newPos;
+  _targetX = _pos select 0; _targetY = _pos select 1; 
+  
+  // Calculate position	 	
+  _cosU = [_dir] call MON_GetCOS;		_sinU = [_dir] call MON_GetSIN;			
+  _cosT = abs cos(_dir);				_sinT = abs sin(_dir);
+  _relTX = _sinT * _dist * _cosU;  	_relTY = _cosT * _dist * _sinU;
+  _newPosX = _targetX + _relTX;		_newPosY = _targetY + _relTY;		
+  _newPos = [_newPosX,_newPosY];
+  _newPos;
 };
 
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n que devuelve las posiciones que se pueden ocupar dentro de un edificio
-//param1: objeto location
-//Retorna numero de posiciones que tiene el edificio
+// Function that returns the positions that can be occupied within a building
+// param1: object location
+// Returns number of positions that the building has
 MON_BldPos = {
     private ["_bld","_bldpos"];
 	_bld=_this; 
@@ -145,9 +152,9 @@ MON_BldPos = {
 };
 				
 // ---------------------------------------------------------------------------------------------------------				
-//Funci�n que devuelve la casa que hay m�s cerca del objeto param1 y las posiciones que se pueden ocupar dentro de ella.
-//param1: objeto 
-//Retorna vector con [objeto location, posiciones que tiene]
+// Function that returns the house that is closest to the param1 object and the positions that can be occupied within it.
+// param1: object
+// Returns vector with [location object, positions it has]
 MON_PosInfo = {
 	private["_obj","_bld","_bldpos"];
 	_obj=_this; 
@@ -157,7 +164,7 @@ MON_PosInfo = {
 	};		
 
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n que devuelve el valor negativo o positivo del seno en base a un angulo
+// Function returning the negative or positive value of the sine based on an angle
 MON_GetSIN = {
 	private ["_dir","_sin"];	
 	_dir=_this select 0; 
@@ -185,7 +192,7 @@ MON_GetSIN = {
 };
 
 // ---------------------------------------------------------------------------------------------------------
-//Funci�n que devuelve el valor negativo o positivo del coseno en base a un angulo
+// Function that returns the negative or positive value of the cosine based on an angle
 MON_GetCOS = {
 	private["_dir","_cos"];	
 	_dir=_this select 0; 
@@ -212,11 +219,12 @@ MON_GetCOS = {
 	_cos
 };	
 
-//Funci�n que busca vehiculos cercanos y hace entrar a las unidades del lider
-//Par�meters: [_grpid,_npc]
-//	<-	_grpid: id of group to assign to vehicle
-//	<-	_npc: lider
-//	->	_getin: true if any getin
+
+// Function that searches for nearby vehicles and enters the units of the leader
+// Par meters: [_grpid, _npc]
+// <- _grid: id of group to assign to vehicle
+// <- _npc: leader
+// -> _getin: true if any getin
 MON_GetIn_NearestVehicles = {
 	private ["_vehicles","_npc","_units","_unitsIn","_grpid","_air"];
 	_grpid = _this select 0;	
@@ -271,11 +279,11 @@ MON_GetIn_NearestVehicles = {
 	//sleep 0.05;
 };
 
-//Funci�n que busca vehiculos cercanos y hace entrar a las unidades del lider
-//Par�meters: [_grpid,_npc]
-//	<-	_grpid: id of group to assign to vehicle
-//	<-	_npc: lider
-//	->	_getin: true if any getin
+// Function that searches for nearby vehicles and enters the units of the leader
+// Par meters: [_grpid, _npc]
+// <- _grid: id of group to assign to vehicle
+// <- _npc: leader
+// -> _getin: true if any getin
 MON_GetIn_NearestCombat = {
 	private["_vehicles","_npc","_units","_unitsIn","_grpid","_dist","_all"];
 	_grpid = _this select 0;	
@@ -324,11 +332,11 @@ MON_GetIn_NearestCombat = {
 	 _unitsIn;
 };
 
-//Funci�n que busca vehiculos cercanos y hace entrar a las unidades del lider
-//Par�meters: [_grpid,_npc]
-//	<-	_grpid: id of group to assign to vehicle
-//	<-	_npc: lider
-//	->	_getin: true if any getin
+// Function that searches for nearby vehicles and enters the units of the leader
+// Par meters: [_grpid, _npc]
+// <- _grid: id of group to assign to vehicle
+// <- _npc: leader
+// -> _getin: true if any getin
 MON_GetIn_NearestBoat = {
 	private["_vehicles","_npc","_units","_unitsIn","_grpid","_dist"];
 	_grpid = _this select 0;	
@@ -368,11 +376,11 @@ MON_GetIn_NearestBoat = {
 	_unitsIn;
 };
 
-//Funci�n que busca staticos cercanos y hace entrar a las unidades del lider
-//Par�meters: [_grpid,_npc]
-//	<-	_grpid: id of group to assign to vehicle
-//	<-	_npc: lider
-//	->	_getin: true if any getin
+// Function that looks for nearby statics and makes the units of the leader
+// Par meters: [_grpid, _npc]
+// <- _grid: id of group to assign to vehicle
+// <- _npc: leader
+// -> _getin: true if any getin
 MON_GetIn_NearestStatic = {
 	private ["_vehicles","_npc","_units","_unitsIn","_grpid","_distance"];
 	_grpid = _this select 0;	
@@ -384,7 +392,8 @@ MON_GetIn_NearestStatic = {
 	_units = [];
 	_unitsIn = [];
 		
-	//Buscamos staticos cerca
+	
+  // We are looking for Static near
 	_vehicles = [_npc,_distance] call MON_NearestsStaticWeapons;
 
 	if ( count _vehicles == 0) exitwith {_unitsIn;};	
@@ -396,14 +405,14 @@ MON_GetIn_NearestStatic = {
 		_units = _units + [_npc];
 	};
 	
-	//Solo tomamos las unidades vivas y que no est�n en vehiculo
+	// We only take live units that are not in a vehicle
 	{
 		if ( (_x iskindof "Man") && _x == vehicle _x && alive _x && canmove _x && canstand _x) then {
 			_unitsIn = _unitsIn + [_x];			
 		};
 	}foreach _units;
 	
-	//Intentamos tomar solo las que est�n disponibles
+	// We try to take only those that are available
 	_units = [];
 	{
 		if (unitready _x) then {
@@ -411,7 +420,7 @@ MON_GetIn_NearestStatic = {
 		};
 	}foreach _unitsin;	
 	
-	//Si hay unidades disponibles las usamos
+	// If there are available units we use them
 	if (count _units > 0) then {
 		_unitsIn = _units;
 	};
@@ -490,7 +499,7 @@ MON_GetIn_NearestStatic = {
 			_units = _units - _unitsIn;
 			
 			if ( (count _unitsIn) > 0) then {			
-				//Metemos las unidades en el vehiculo				
+        // We put the units in the vehicle				
 				[_grpid,_unitsIn,_vehicle] spawn MON_UnitsGetIn;	
 				//if (KRON_UPS_Debug>0 ) then {player sidechat format["%1: Get in %2 %3 units of %4 available",_grpid,typeof _vehicle,count _unitsIn,_emptypositions]}; 				
 				if (KRON_UPS_Debug>0 ) then {diag_log format["KRON_UPS_Debug: Group %1: Moving %3 units into %2 with %4 positions",_grpid,typeof _vehicle,count _unitsIn,_emptypositions]}; 
@@ -503,12 +512,11 @@ MON_GetIn_NearestStatic = {
 	_units;
  };
 
-
-//Funcion que mete la tropa en el vehiculo
-//Par�meters: [_grpid,_unitsin,_vehicle]
-//	<-	_grpid: id of group to assign to vehicle
-//	<-	_unitsin: array of units to getin
-//	<-	_vehicle
+// Function that puts the troop in the vehicle
+// Par meters: [_grpid, _unitsin, _vehicle]
+// <- _grid: id of group to assign to vehicle
+// <- _unitsin: array of units to getin
+// <- _vehicle
 MON_UnitsGetIn = {
 	private ["_grpid","_vehicle","_driver","_gunner","_unitsin","_units","_Commandercount","_Drivercount","_Gunnercount","_cargo","_Cargocount","_commander","_vehgrpid"];	
 			
@@ -531,7 +539,7 @@ MON_UnitsGetIn = {
 	_Commandercount = (_vehicle) emptyPositions "Commander"; 
 	_Drivercount = (_vehicle) emptyPositions "Driver"; 					
 
-	//Obtenemos el identificador del vehiculo
+	// We obtain the identifier of the vehicle
 	_vehgrpid = _vehicle getvariable ("UPSMON_grpid");
 	_cargo = _vehicle getvariable ("UPSMON_cargo");
 	if ( isNil("_vehgrpid") ) then {_vehgrpid = 0;};	
@@ -541,7 +549,7 @@ MON_UnitsGetIn = {
 	_cargo = _cargo + _unitsin; //A�adimos a la carga
 	_vehicle setVariable ["UPSMON_cargo", _cargo, false];			
 
-	//Hablitamos a la IA para entrar en el vehiculo		
+	// We talk to the AI ​​to get into the vehicle	
 	{		
 		[_x,0] call MON_dostop;
 		
@@ -575,7 +583,7 @@ MON_UnitsGetIn = {
 	}foreach _units;			
 	//if (KRON_UPS_Debug>0 ) then {player sidechat format["%1: _vehgrpid %2 ,_Gunnercount %3, %4",_grpid,_vehgrpid,_Gunnercount,count _units]}; 	
 				
-	//Si el vehiculo pertenece al grupo asignamos posiciones de piloto, sin� solo de carga
+	// If the vehicle belongs to the group we assign pilot positions, without load only
 	if ( _vehgrpid == _grpid ) then {
 		
 		//Asignamos el conductor
@@ -585,7 +593,7 @@ MON_UnitsGetIn = {
 			_units = _units - [_driver];
 		};
 		
-		//Asignamos el artillero
+		// Assign the gunner
 		if ( _Gunnercount > 0 && count (_units) > 0 ) then { 				
 			_gunner = [_vehicle,_units] call MON_getNearestSoldier;				
 			[_gunner,_vehicle] spawn MON_assignasgunner;					
@@ -594,7 +602,7 @@ MON_UnitsGetIn = {
 	};
 	
 	//if (KRON_UPS_Debug>0 ) then {player sidechat format["%1: _vehgrpid=%2 units=%4",_grpid,_vehgrpid,_cargocount,count _units]}; 	
-	//Movemos el resto como carga
+	// We move the rest as load
 	if ( _Cargocount > 0 && count (_units) > 0 ) then { 	
 		{			 
 			_x assignAsCargo _vehicle;				
@@ -649,9 +657,8 @@ MON_avoidDissembark = {
 	if (!alive _npc || !canmove _npc) exitwith{};		
 };
 
-
-//Funci�n que devuelve un vehiculo de transporte cercano	
-//Par�meters: [_npc]
+// Function returning a nearby transport vehicle
+// Parameters: [_npc]
 //	<-	_npc: object for  position search
 //	->	_vehicle:  vehicle
 MON_NearestLandTransport = {
@@ -668,7 +675,7 @@ MON_NearestLandTransport = {
 	_Drivercount = 0;
 		
 	
-	//Buscamos objetos cercanos
+	// We are looking for nearby objects
 	_OCercanos = nearestObjects [_npc, ["Car","TANK","Truck","Motorcycle"] , 150];		
 	
 	{
@@ -685,9 +692,9 @@ MON_NearestLandTransport = {
 	
 	_vehicle;
 };	
-	
-//Funci�n que devuelve un array con los vehiculos terrestres m�s cercanos
-//Par�meters: [_npc,_distance]
+
+// Returns an array with the nearest land vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -705,7 +712,7 @@ MON_NearestsLandTransports = {
 	_Commandercount = 0;
 	_Drivercount = 0;
 	
-	//Buscamos objetos cercanos
+	// We are looking for nearby objects
 	_OCercanos = nearestObjects [_npc, ["Car","TANK","Truck","Motorcycle"] , _distance];
 		
 	{
@@ -723,8 +730,8 @@ MON_NearestsLandTransports = {
 	_vehicles;
 };	
 
-//Funci�n que devuelve un array con los vehiculos terrestres m�s cercanos
-//Par�meters: [_npc,_distance]
+// Returns an array with the nearest land vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -743,7 +750,7 @@ MON_NearestsLandCombat = {
 	_Commandercount = 0;
 	_Drivercount = 0;
 	
-	//Buscamos objetos cercanos
+	// We are looking for nearby objects
 	_OCercanos = nearestObjects [_npc, ["Car","TANK","Truck","Motorcycle"] , _distance];
 		
 	{
@@ -763,8 +770,8 @@ MON_NearestsLandCombat = {
 	_vehicles;
 };		
 
-//Funci�n que devuelve un array con los vehiculos aereos m�s cercanos
-//Par�meters: [_npc,_distance]
+// Function returning an array with the nearest air vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -782,7 +789,7 @@ MON_NearestsAirTransports = {
 	_Commandercount = 0;
 	_Drivercount = 0;
 	
-	//Buscamos objetos cercanos
+	// We are looking for nearby objects
 	_OCercanos = nearestObjects [_npc, ["Helicopter"] , _distance];
 		
 	{
@@ -801,7 +808,7 @@ MON_NearestsAirTransports = {
 };	
 	
 //Function that returns an array with the closest air vehicles
-//Par�meters: [_npc,_distance]
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -822,7 +829,7 @@ MON_NearestsAirCombat = {
 	
 	
 	
-	//Buscamos objetos cercanos
+	// We are looking for nearby objects
 	_OCercanos = nearestObjects [_npc, ["Helicopter"] , _distance];
 		
 	{
@@ -843,8 +850,8 @@ MON_NearestsAirCombat = {
 	_vehicles //return
 };		
 
-//Funci�n que devuelve un array con los vehiculos staticos m�s cercanos
-//Par�meters: [_npc,_distance]
+// Function returning an array with the closest static vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -859,7 +866,7 @@ MON_NearestsStaticWeapons = {
 		_vehicles = [];
 		_Gunnercount = 0;
 		
-		//Buscamos objetos cercanos
+		// We are looking for nearby objects
 		_OCercanos = nearestObjects [_npc, ["StaticWeapon"] , _distance];
 			
 		{
@@ -871,8 +878,8 @@ MON_NearestsStaticWeapons = {
 		_vehicles //return
 	};		
 	
-//Funci�n que devuelve un array con los vehiculos marinos m�s cercanos
-//Par�meters: [_npc,_distance]
+// Function returning an array with the nearest marine vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -890,7 +897,7 @@ MON_Nearestsboats = {
 		_Commandercount = 0;
 		_Drivercount = 0;
 		
-		//Buscamos objetos cercanos
+		// We are looking for nearby objects
 		_OCercanos = nearestObjects [_npc, ["Ship"] , _distance];
 			
 		{
@@ -946,12 +953,12 @@ MON_assignasgunner = {
 
 //Allow getin
 MON_Allowgetin = {
-	//Hablitamos a la IA para entrar en el vehiculo		
+	// We talk to the AI ​​to get into the vehicle		
 	[_this] allowGetIn true;		
 };
 	
 
-//If every on is outside, make sure driver can move
+//If every one is outside, make sure driver can move
  MON_checkleaveVehicle={
 	
 private ["_in","_npc","_vehicle","_driver"];
@@ -980,7 +987,7 @@ _npc = _this select 0;
 
  
 //Function for order a unit to exit if no gunner
-//Par�meters: [_npc]
+//Parameters: [_npc]
 //	<-	_npc: 
 MON_GetOut = {
 		private ["_vehicle","_npc","_gunner"];	
@@ -1008,7 +1015,7 @@ MON_GetOut = {
 	};	
 
 //Function for order a unit to exit
-//Par�meters: [_npc]
+//Parameters: [_npc]
 //	<-	_npc: 	
 MON_doGetOut = {	
 	private ["_vehicle","_npc","_dir"];	
@@ -1043,7 +1050,7 @@ MON_doGetOut = {
 };
 	
 //Function for exiting of heli	
-//Par�meters: [_heli,_targetPos,_atdist]
+//Parameters: [_heli,_targetPos,_atdist]
 //	<-	_heli: 
 //	<-	_targetPos:  position for exiting(if no waypoint used)
 //	<- 	_atdist:  distance for doing paradrop or landing
@@ -1276,13 +1283,13 @@ MON_landHely = {
 		//Moves to current target Position
 		_grpid = _npc getvariable "UPSMON_grpid";
 		if !(isnil "_grpid") then {
-			_targetpos =(KRON_targetsPos select _grpid);
+			_targetpos = (KRON_targetsPos select _grpid);
 			_npc move _targetpos;
 			if (KRON_UPS_Debug>0 ) then { diag_log format["%1 landed, moving to %2 %3",_grpid,_targetpos,count KRON_targetsPos];};
 		};			
 	};
 	
-	//Quitamos el id al vehiculo para que pueda ser reutilizado
+	//We remove the id to the vehicle so it can be reused
 	_heli setVariable ["UPSMON_grpid", 0, false];	
 	_heli setVariable ["UPSMON_cargo", [], false];	
 	_heli setVariable ["UPSMON_landing", false, false];	
@@ -1327,7 +1334,7 @@ MON_HeliStuckcontrol = {
 	_heli setVariable ["UPSMON_stuckcontrol", false, false];
 };
 
-//Function that checks is gunner is alive, if not moves a cargo
+//Function that checks if gunner is alive, if not moves a cargo
 MON_Gunnercontrol = {
 	private ["_vehicle","_gunnercontrol","_hasgunner","_crew","_crew2"];				
 	_vehicle = _this select 0;
@@ -1380,7 +1387,7 @@ MON_Gunnercontrol = {
 };
 
 
-//Mueve a todo el grupo adelante
+//Move the whole group forward
 MON_move = {
 	private["_npc","_dir1","_targetPos","_dist"];	
 	_npc = _this select 0;
@@ -1394,7 +1401,7 @@ MON_move = {
 	_npc move _targetPos;		
 };	
 
-//Mueve al soldado adelante
+//Move the soldier forward
 MON_domove = {
 	private["_npc","_dir1","_targetPos","_dist"];	
 	_npc = _this select 0;
@@ -1410,7 +1417,7 @@ MON_domove = {
 	_npc domove _targetPos;		
 };	
 
-//Funci�n que detiene al soldado y lo hace esperar x segundos
+//Function that stops the soldier and makes him wait x seconds
 MON_doStop = {
 	private["_sleep","_npc"];	
 	
@@ -1421,14 +1428,14 @@ MON_doStop = {
 	if (!alive _npc  || !canmove _npc ) exitwith{};
 	if 	( _sleep == 0 ) then {_sleep = 0.1};	
 	
-	//Restauramos valores por defecto de movimiento
+	//We restore default values ​​of motion
 	//_npc disableAI "MOVE"; 
 	dostop _npc ; 
 	sleep _sleep;	
 	[_npc] spawn MON_cancelstop;
 };
 
-//Funci�n que detiene al soldado y lo hace esperar x segundos
+//Function that stops the soldier and makes him wait x seconds
 MON_cancelstop = {
 	private["_npc"];	
 	_npc = _this select 0;
@@ -1446,7 +1453,7 @@ MON_evadeGrenade = {
 	_this playmovenow "AmovPpneMstpSrasWrflDnon"; //prone							
 };
 
-//Realiza la animaci�n de la croqueta
+//Make the croquette animation
 MON_animCroqueta = {	
 	if (!alive _this || (vehicle _this) != _this || !canmove _this || !(_this iskindof "Man")) exitwith{};
 		
@@ -1480,7 +1487,7 @@ MON_throw_grenade = {
 	*/
 };
 
-//Establece el tipo de posici�n
+//Sets the type of position
 MON_setUnitPos = {
 	private["_pos","_npc"];	
 	_npc = _this select 0;
@@ -1491,7 +1498,7 @@ MON_setUnitPos = {
 	_npc setUnitPos _pos;
 	sleep 1;
 };
-//Establece el tipo de posici�n
+// Set position type
 MON_setUnitPosTime = {
 	private ["_pos","_npc","_time"];	
 	_npc = _this select 0;
@@ -1505,7 +1512,7 @@ MON_setUnitPosTime = {
 	sleep 1;
 };
 
-// Funci�n para  mirar en una direcci�n
+// Run to look in one direction
 MON_dowatch = {
 	private["_target","_npc"];		
 	_npc = _this select 0;
@@ -1516,8 +1523,8 @@ MON_dowatch = {
 	sleep 1;
 };
 
-//Funci�n que mueve al soldado a la posici�n de conductor
-//Par�meters: [_npc,_vehicle]
+// Function that moves the soldier to the driver's position
+//Parameters: [_npc,_vehicle]
 //	<-	 _npc: unit to move to driver pos
 //	<-	 _vehicle
 MON_movetoDriver = {
@@ -1525,7 +1532,7 @@ MON_movetoDriver = {
 	_npc = _this ;
 	_vehicle = vehicle _npc;
 
-	//Si est� muerto
+	// If he's dead
 	if (vehicle _npc == _npc || !alive _npc || !canmove _npc || !(_npc iskindof "Man")) exitwith{};
 	
 	if (isnull(driver _vehicle) || !alive(driver _vehicle) || !canmove(driver _vehicle)) then { 	
@@ -1533,7 +1540,7 @@ MON_movetoDriver = {
 		 _npc action ["getOut", _vehicle];
 		 doGetOut _npc;
 		WaitUntil {vehicle _npc==_npc || !alive _npc || !canmove _npc};
-		//Si est� muerto
+		// If he's dead
 		if (!alive _npc || !canmove _npc) exitwith{};		
 		unassignVehicle _npc;
 		_npc assignasdriver _vehicle;
@@ -1541,8 +1548,8 @@ MON_movetoDriver = {
 	};
 };
 
-//Funci�n que mueve al soldado a la posici�n de conductor
-//Par�meters: [_npc,_vehicle]
+// Function that moves the soldier to the driver's position
+//Parameters: [_npc,_vehicle]
 //	<-	 _npc: unit to move to driver pos
 //	<-	 _vehicle
 MON_movetogunner = {
@@ -1551,7 +1558,7 @@ MON_movetogunner = {
 	_vehicle = vehicle _npc;
 	
 	sleep 0.05;
-	//Si est� muerto
+	// If he's dead
 	if (vehicle _npc == _npc || !alive _npc || !canmove _npc || !(_npc iskindof "Man")) exitwith{};
 	
 	if (isnull(gunner _vehicle) || !alive(gunner _vehicle) || !canmove(gunner _vehicle)) then { 	
@@ -1559,7 +1566,7 @@ MON_movetogunner = {
 		 _npc action ["getOut", _vehicle];
 		 doGetOut _npc;
 		WaitUntil {vehicle _npc==_npc || !alive _npc || !canmove _npc};
-		//Si est� muerto
+		// If he's dead
 		if (!alive _npc || !canmove _npc) exitwith{};		
 		unassignVehicle _npc;
 		_npc assignasgunner _vehicle;
@@ -1567,8 +1574,8 @@ MON_movetogunner = {
 	};
 };
 
-//Funci�n que retorna array de arrays con edificios y sus plantas
-//Par�meters: [_object,(_distance,_minfloors)]
+// Function that returns array of arrays with buildings and their plants
+//Parameters: [_object,(_distance,_minfloors)]
 //	<-	_object: soldier to get near buildings 
 //	<-	_distance: distance to search buildings (optional, 25 by default)
 //	<- 	_minfloors:  min floors of building (optional) if not especified  min floors is 2
@@ -1589,7 +1596,7 @@ MON_GetNearestBuildings = {
 	_bldpos =0;
 	
 
-	//La altura m�nima es 2 porque hay muchos edificios q devuelven 2 de altura pero no se puede entrar en ellos.
+	// The minimum height is 2 because there are many buildings that return 2 high but you can not enter them.
 	if ( _minfloors == 0  ) then {
 		_minfloors = 2;
 	 };	
@@ -1607,8 +1614,8 @@ MON_GetNearestBuildings = {
 	_blds;
 };
 
-//Function to move al units of squad to near buildings
-//Par�meters: [_npc,(_patrol,_minfloors)]
+//Function to move all units of squad to near buildings
+//Parameters: [_npc,(_patrol,_minfloors)]
 //	<-	 _npc: lider
 //	<-	 _distance: distance to search buildings (optional, 25 by default)
 //	<-	 _patrol: wheter must patrol or not
@@ -1645,19 +1652,19 @@ MON_moveNearestBuildings = {
 	
 	if (count _bldunitsin == 0) exitwith {};		
 	
-	//Obtenemos los edificios cercanos al lider
+	// We get buildings near the leader
 	_blds = [_npc,_distance] call MON_GetNearestBuildings;		
 	
 	if (count _blds==0) exitwith {};
 	
-	//Movemos a la unidades a los edificios cercanos.
+	// Move the units to nearby buildings.
 	[_bldunitsin, _blds, _patrol,_wait,_all] spawn MON_moveBuildings;	
 
 };
 
 
 //Function to move al units of squad to near buildings
-//Par�meters: [_npc,(_patrol,_minfloors)]
+//Parameters: [_npc,(_patrol,_minfloors)]
 //	<-	 _units: array of units
 //	<-	 _blds: array of buildingsinfo [_bld,pos]
 //	<-	 _patrol: wheter must patrol or not
@@ -1702,7 +1709,7 @@ MON_moveBuildings = {
                 if (_bldpos >= 8) then { _cntobjs1 =   (round(random 3))  + 1;};				
 			};					
 		
-			//Buscamos una unidad cercana para recorrerlo
+			// We are looking for a nearby unit to visit
 			{							
 				if (_x iskindof "Man" && unitReady _x && canmove _x && alive _x && vehicle _x == _x && _i < _cntobjs1) then{
 					_movein = _movein + [_x];
@@ -1755,7 +1762,7 @@ MON_moveBuildings = {
 };
 
 //Function to move a unit to a position in a building
-//Par�meters: [_npc,(_patrol,_minfloors)]
+//Parameters: [_npc,(_patrol,_minfloors)]
 //	<-	 _npc: soldier
 //	<-	 _bld: building
 //	<-	 _altura: building
@@ -1773,10 +1780,10 @@ MON_movetoBuilding = {
 	_altura = _this select 2;
 	if ((count _this) > 3) then {_wait = _this select 3;};
 
-	//Si est� en un vehiculo ignoramos la orden
+	// If you are in a vehicle we ignore the order
 	if (vehicle _npc != _npc || !alive _npc || !canmove _npc) exitwith{};
 	
-	//Si ya est� en un edificio ignoramos la orden
+	// If you are already in a building we ignore the order
 	_inbuilding = _npc getvariable ("UPSMON_inbuilding");
 	if ( isNil("_inbuilding") ) then {_inbuilding = false;};	
 	if (_inbuilding)  exitwith{};
@@ -1826,8 +1833,8 @@ MON_movetoBuilding = {
 };
 
 
-//Funci�n para mover a una unidad al edificio m�s cercano
-//Par�meters: [_npc,_bld,(_BldPos)]
+// Function to move a unit to the nearest building
+//Parameters: [_npc,_bld,(_BldPos)]
 //	<-	 _npc: soldier to move
 // 	<-	 _bld:building to patrol
 //	<-	 _BldPos: positions of builiding (optional)
@@ -1854,14 +1861,14 @@ MON_patrolBuilding = {
 	
 	if (_patrolto > _bldpos) then {_patrolto = _bldpos};
 	
-	//Si ya est�  muerto o no se puede mover se ignora
+	// If it is already dead or can not be moved it is ignored
 	if (!(_npc iskindof "Man") || !alive _npc || !canmove _npc) exitwith{};
 	
-	//Si ya est� en un edificio ignoramos la orden
+	// If you are already in a building we ignore the order
 	_inbuilding = _npc getvariable ("UPSMON_inbuilding");
 	if ( isNil("_inbuilding") ) then {_inbuilding = false;};	
 	
-	//Asignamos el vehiculo a a la escuadra si contiene las posiciones justas
+	// We assign the vehicle to the squadron if it contains the right positions
 	if (!_inbuilding) then {
 		_inbuilding	 = true;
 		_npc setVariable ["UPSMON_inbuilding", _inbuilding, false];	
@@ -1890,21 +1897,21 @@ MON_patrolBuilding = {
 			sleep 0.05;
 		};
 		
-		//Si est� en un vehiculo ignoramos la orden
+		// If you are in a vehicle we ignore the order
 		if (!alive _npc || !canmove _npc) exitwith{};
 		
-		//Volvemos con el lider
+		// Back to the leader
 		_npc domove	(position leader _npc);
 		
-		//Marcamos que ya hemos finalizado
-		sleep 60; //Damos tiempo para salir del edificio
+		// Mark that we have already finished
+		sleep 60; // We give time to leave the building
 		_npc setVariable ["UPSMON_inbuilding", false, false];			
 	};		
 };
 
 //NO MINES IN EPOCH, I THINK........
 //Function to put a mine
-//Par�meters: [_npc,(_position)]
+//Parameters: [_npc,(_position)]
 //	<-	 _npc: leader
 // 	<-	 _position:location for mine (optional)
 /*MON_CreateMine = {
@@ -1923,10 +1930,10 @@ MON_patrolBuilding = {
 	};
 	
 	//leader only control not work
-	//Si est� en un vehiculo ignoramos la orden
+	// If you are in a vehicle we ignore the order
 	if (!(_soldier iskindof "Man" ) || _soldier == _npc || _soldier!=vehicle _soldier || !alive _soldier || !canmove _soldier) exitwith {false};		
 	
-	//Animaci�n para montar el arma
+	// Animation to mount the weapon
 	if ((count _this) > 1) then {
 		[_soldier,_position] spawn MON_doCreateMine;
 	}else{
@@ -1955,7 +1962,7 @@ MON_doCreateMine = {
 
 	if (moveToFailed _soldier || !alive _soldier || _soldier != vehicle _soldier || !canmove _soldier) exitwith {false};	
 	
-	 //Crouche
+	 //Crouch
 	_soldier playMovenow "ainvpknlmstpslaywrfldnon_1";
 	sleep 1;
 	
@@ -1973,7 +1980,7 @@ MON_doCreateMine = {
 };*/
 
 //Function to surrender AI soldier
-//Par�meters: [_npc]
+//Parameters: [_npc]
 //	<-	 _npc: soldier to surrender
 MON_surrender = {
 	private ["_npc","_vehicle"];
@@ -1992,7 +1999,7 @@ MON_surrender = {
 		
 		if ( "Air" countType [_vehicle]>0) then {											
 			
-			//Si acaba de entrar en el heli se define punto de aterrizaje
+			// If you just entered the heli you will define landing point
 			if (_npc == driver _vehicle ) then { 
 				[_vehicle] call MON_landHely;							
 			};				
@@ -2000,7 +2007,7 @@ MON_surrender = {
 			_npc spawn MON_doGetOut;			
 		};	
 		
-		//Esperamos a que est� parado		
+		// We wait for you to stand	
 		waituntil {_npc == vehicle _npc || !alive _npc};
 	};	
 	
@@ -2022,7 +2029,7 @@ MON_getleader = {
 	_members = _this select 1;	
 	
 	sleep 0.05;
-	if (!alive _npc ) then {
+	if ((!alive _npc ) && !(isNil "_npc")) then { //isnil inserted here
 
         //get name of the dead leader
         _leadername = _npc getVariable ["SAR_leader_name",""];
@@ -2036,7 +2043,7 @@ MON_getleader = {
 		} foreach _members;					
 		
 		//if no soldier out of vehicle takes any
-		if (!alive _npc ) then {
+		if (!alive _npc) then {
 			{
 				if (alive _x && canmove _x) exitwith {_npc = _x;};
 			} foreach _members;	
@@ -2065,11 +2072,11 @@ MON_getleader = {
         _npc setVariable ["SAR_leader_name",_leadername,false];
         _npc setVariable ["SAR_fightmode",_fightmode,false];
 
-        //diag_log format["Assigned new leader: %1",_npc];
+        diag_log format["Assigned new leader: %1",_npc];
         
     } else {
     
-        //diag_log format["Leader is still alive: %1",_npc];
+        diag_log format["Leader is still alive: %1",_npc];
     
     
     };
@@ -2087,7 +2094,7 @@ MON_ACE_Watersurvival = {
 	waitUntil { !canmove _ejector || !alive _ejector || isnull (_ejector) || ((getPos vehicle _ejector) select 2 < 1) };
 	if ( !surfaceIsWater (getpos _ejector) || !canmove _ejector || !alive _ejector || isnull (_ejector) ) exitWith {};
 	
-	//Miramos de entrar en un barco cercano
+	// We look at entering a nearby boat
 	_grpid = _ejector getvariable "UPSMON_grpid";
 	if (isnil "_grpid") then {_grpid = 0};		
 	_in = [_grpid,_ejector,30] call MON_GetIn_NearestBoat;
@@ -2119,7 +2126,7 @@ MON_ACE_Watersurvival = {
 
 //=============================================================Changed by Shay_gman========================================================================================
 //Function to do artillery
-//Par�meters: [_position,(_rounds,_area,_cadence,_mincadence)]
+//Parameters: [_position,(_rounds,_area,_cadence,_mincadence)]
 //  <-  _arti: 
 //	<-	 _position: center of fire create artillery
 //	<-	 _rounds: rounds of fire
@@ -2172,8 +2179,9 @@ MON_artillery_dofire = {
 		_arti setVariable ["timeout", _timeout, false];				
 	};
 
-//Funci�n que devuelve un array con los vehiculos terrestres m�s cercanos
-//Par�meters: [_npc,_distance]
+
+// Returns an array with the nearest land vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -2187,7 +2195,7 @@ MON_deadbodies = {
 		_OCercanos = [];
 		_bodies = [];
 		
-		//Buscamos objetos cercanos
+		// We are looking for nearby objects
 		_OCercanos = nearestObjects [_npc, ["Man"] , _distance];
 			
 		{			
@@ -2197,8 +2205,8 @@ MON_deadbodies = {
 		_bodies;
 	};	
 
-//Funci�n que devuelve un array con los vehiculos terrestres m�s cercanos
-//Par�meters: [_npc,_distance]
+// Returns an array with the nearest land vehicles
+//Parameters: [_npc,_distance]
 //	<-	_npc: object for  position search
 //	<-	_distance:  max distance from npc
 //	->	_vehicles:  array of vehicles
@@ -2213,7 +2221,7 @@ MON_nearestSoldiers = {
 	_OCercanos = [];
 	_soldiers = [];
 	
-	//Buscamos objetos cercanos
+	// We are looking for nearby objects
 	_OCercanos = nearestObjects [_npc, ["Man"] , _distance];					
 	_OCercanos = _OCercanos - [_npc];			
 	
